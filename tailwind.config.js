@@ -6,8 +6,7 @@ module.exports = {
   theme: {
     extend: {},
     fontFamily: {
-      sans: ["'Montserrat'"],
-      mono: ["'Inconsolata'"]
+      garamond: ['EB Garamond', 'serif'],
     }
   },
   plugins: [

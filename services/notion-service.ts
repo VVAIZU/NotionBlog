@@ -47,8 +47,14 @@ export default class NotionService {
                     string: {
                         equals: slug
                     }
+                },
+            },
+            sorts: [
+                {
+                    property: 'Created',
+                    direction: 'descending'
                 }
-            }
+            ]
         });
 
         if (response.results.length === 0) {
@@ -109,25 +115,24 @@ export default class NotionService {
     // }
 
     private static pageToPostTransformer(page: any): BlogPost {
-        let cover = page.cover ? page.cover : { type: 'none' }; // Добавим проверку на null/undefined
-        console.log(cover);
-
+        let cover = page.cover ? page.cover : { type: 'none' }; // Default if no cover is provided
+    
         switch (cover.type) {
             case 'file':
-                cover = page.cover.file;
+                cover = cover.file.url; // Assuming you want to use the URL directly
                 break;
             case 'external':
-                cover = page.cover.external.url;
+                cover = cover.external.url; // Handle external URLs if needed
                 break;
             default:
-                // Добавим изображение по умолчанию, если нужно...
-                cover = 'https://clipground.com/images/generic-company-logo-png-5.png';
+                cover = ''; // Set a default or handle other cases
         }
 
         return {
             id: page.id,
             cover: cover,
             title: page.properties.Name.title[0].plain_text,
+            author: page.properties.Author.rich_text[0].plain_text,
             tags: page.properties.Tags.multi_select,
             description: page.properties.Description.rich_text[0].plain_text,
             date: page.properties.Updated.last_edited_time,
